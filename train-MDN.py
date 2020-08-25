@@ -4,6 +4,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
+import logging
 
 #keras imports
 import keras
@@ -35,7 +36,7 @@ def train_nn(training_input,
             regularizer,
             #momentum=0.4,
             #batch=60,
-            #min_epochs=10,
+            min_epochs=50,
             #max_epochs=230,
             ###patience_increase=1.75,
             ###threshold=0.995,
@@ -74,9 +75,16 @@ def train_nn(training_input,
 
 #============================= Reading trainign data ============================================================
 
-    with h5py.File(training_input, 'r') as hf:  
-        x_train = hf['train_data_x'][:]
-        y_train = hf['train_data_y'][:]
+    logging.basicConfig(
+        level='INFO',
+        format='[%(asctime)s %(levelname)s] %(message)s'
+    )
+
+    logging.info('Reading data from {}'.format(training_input))
+    with h5py.File(training_input, 'r') as hf:
+        print(hf.keys())  
+        x_train = hf['input'][:]
+        y_train = hf['target'][:]
         #x_valid = hf['valid_data_x'][:]
         #y_valid = hf['valid_data_y'][:]
 
@@ -103,7 +111,7 @@ def train_nn(training_input,
 #================================== Define the network layers ===================================================
 
     inputs = Input(shape=(60,))
-    print('structure', structure)
+    logging.info('structure ' + str(structure))
     h = Dense(structure[0], activation='relu', W_regularizer=l2(regularizer))(inputs)
     for l in range (0, len(structure)-1):
         h = Dense(structure[l+1], activation='relu', W_regularizer=l2(regularizer))(h)
@@ -125,7 +133,7 @@ def train_nn(training_input,
     model = keras.models.Model(inputs=inputs, outputs=output_layer)
 
     #print the summary
-    print(model.summary())
+    logging.info(model.summary())
     plot_model(model, to_file= training_output+'/'+outFile+'.png')
 
     model.compile(
@@ -139,7 +147,7 @@ def train_nn(training_input,
         x=x_train,  #tranning_data[0],
         y=target_values, #[y_train[:,0:2], y_train[:,2:4]],  #tranning_data[1],
         batch_size=100,
-        epochs=2,
+        epochs=min_epochs,
         #validation_data=valid_data,
         validation_split=0.1,
         callbacks=[
@@ -280,7 +288,7 @@ def _main():
         help= 'l2 regularization value')
     #parse.add_argument('--momentum', type=float, default=0.4)
     #parse.add_argument('--batch', type=int, default=1)
-    #parse.add_argument('--min-epochs', type=int, default=10)
+    parse.add_argument('--min-epochs', type=int, default=50)
     #parse.add_argument('--max-epochs', type=int, default=1000)
     #parse.add_argument('--patience-increase', type=float, default=1.75)
     #parse.add_argument('--threshold', type=float, default=0.995)
@@ -301,7 +309,7 @@ def _main():
         args.regularizer,
         #args.momentum,
         #args.batch,
-        ##args.min_epochs,
+        args.min_epochs,
         #args.max_epochs,
         ##args.patience_increase,
         ##args.threshold,

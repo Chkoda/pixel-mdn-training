@@ -123,8 +123,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-data/NNinput_pos1_training.h5
-data/pos1.h5
-data/pos2.h5
-data/pos3.h5
+
+
+data
 runcmd.TXT
+slurm_run/slurm*
