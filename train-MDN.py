@@ -2,6 +2,8 @@ import os
 os.environ['KERAS_BACKEND'] = 'theano'
 import argparse
 import numpy as np
+np.random.seed(42)
+
 import matplotlib.pyplot as plt
 import h5py
 import logging
@@ -19,7 +21,7 @@ from theano import tensor as T, function, printing
 
 #local import
 import utils
-np.random.seed(12122)
+
 
 
 

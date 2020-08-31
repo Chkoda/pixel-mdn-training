@@ -2,7 +2,7 @@
 #SBATCH -C gpu
 #SBATCH -N 3
 #SBATCH -G 3
-#SBATCH -t 04:30:00
+#SBATCH -t 05:30:00
 #SBATCH -q regular
 #SBATCH -J runtest
 #SBATCH -A m1759
@@ -18,7 +18,7 @@ conda activate py3theano
 
 #run the application:
 cd /global/cfs/cdirs/atlas/achkodrov/pixel-mdn-training/
-srun --hint=nomultithread -N 1 -G 1 python train-MDN.py --training_input data/pos1normalized.h5 --training_output slurm_run --outFile 824MDN_1particle --network_type 1particle --config pos1_config.txt &
-srun --hint=nomultithread -N 1 -G 1 python train-MDN.py --training_input data/pos2normalized.h5 --training_output slurm_run --outFile 824MDN_2particle --network_type 2particle --config pos2_config.txt &
-srun --hint=nomultithread -N 1 -G 1 python train-MDN.py --training_input data/pos3normalized.h5 --training_output slurm_run --outFile 824MDN_3particle --network_type 3particle --config pos3_config.txt &
+srun --hint=nomultithread -N 1 -G 1 python train-MDN.py --training_input data/830MDN_pos1_evensplit_train.h5 --training_output slurm_run --outFile 830MDNevensplit_1particle --network_type 1particle --config pos1_config.txt &
+srun --hint=nomultithread -N 1 -G 1 python train-MDN.py --training_input data/830MDN_pos2_evensplit_train.h5 --training_output slurm_run --outFile 830MDNevensplit_2particle --network_type 2particle --config pos2_config.txt &
+srun --hint=nomultithread -N 1 -G 1 python train-MDN.py --training_input data/830MDN_pos3_evensplit_train.h5 --training_output slurm_run --outFile 830MDNevensplit_3particle --network_type 3particle --config pos3_config.txt &
 wait
